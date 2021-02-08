@@ -1,0 +1,11 @@
+fio --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --rw=read --filename=/dev/vdb --bs=4k --iodepth=64 --size=5G --numjobs=8 --group_reporting
+
+fio --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --rw=write --filename=/dev/vdb --bs=4k --iodepth=64 --size=5G --numjobs=8 --group_reporting
+
+fio --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --rw=rw --filename=/dev/vdb --bs=4k --iodepth=64 --size=5G --rwmixread=75 --numjobs=8 --group_reporting
+
+fio --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --rw=randread --filename=/dev/vdb --bs=4k --iodepth=64 --size=5G --numjobs=8 --group_reporting
+
+fio --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --rw=randwrite --filename=/dev/vdb --bs=4k --iodepth=64 --size=5G --numjobs=8 --group_reporting
+
+fio --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --rw=randrw --filename=/dev/vdb --bs=4k --iodepth=64 --size=5G --rwmixread=75 --numjobs=8 --group_reporting

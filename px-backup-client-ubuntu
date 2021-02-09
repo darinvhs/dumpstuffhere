@@ -1,0 +1,22 @@
+sudo apt update
+
+# installing dependencies
+sudo apt install libfuse3-3 qrencode
+
+# linking a newer version to an older version' name
+sudo ln -s /usr/lib/x86_64-linux-gnu/libapt-pkg.so.6.0.0 /usr/lib/x86_64-linux-gnu/libapt-pkg.so.5.0.0
+sudo ln -s /usr/lib/x86_64-linux-gnu/libapt-pkg.so.6.0 /usr/lib/x86_64-linux-gnu/libapt-pkg.so.5.0
+
+# getting proxmox-backup-client
+wget "http://download.proxmox.com/debian/pbs/dists/buster/pbs-no-subscription/binary-amd64/proxmox-backup-client_1.0.6-1_amd64.deb"
+
+# installung bin-utils and extracting .dep-file
+sudo apt install binutils
+ar x proxmox-backup-client_1.0.6-1_amd64.deb
+tar -xJf data.tar.xz
+
+# making the executables usable in your system
+sudo cp -a usr/bin /usr/local
+sudo cp -a usr/share /usr/local
+
+https://forum.proxmox.com/threads/how-to-install-proxmox-backup-client-under-ubuntu.81371/

@@ -1,0 +1,51 @@
+https://github.com/sg4r/proxmox-backup-client
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+source $HOME/.cargo/env
+
+yum -y install systemd-devel clang-devel libzstd-devel libacl-devel pam-devel fuse3-devel libuuid-devel
+yum -y groupinstall 'Development Tools'
+yum -y install git vim
+
+git clone https://github.com/sg4r/proxmox-backup-client.git
+cd proxmox-backup-client
+
+git clone git://git.proxmox.com/git/proxmox
+git clone git://git.proxmox.com/git/proxmox-backup.git
+
+git clone git://git.proxmox.com/git/pxar.git
+cd pxar
+git checkout 4f2d271a9608b576bf2dad22672a930285b5d7dd
+cd ..
+
+cd proxmox
+git checkout 4dec479d2c46bd8cec28c1faa17aa013307de764
+patch -p1 <../proxmox.patch
+cd ..
+
+cd proxmox-backup
+git checkout 2d87f2fb73b9629abdfac18aefac213b9130a609
+patch -p1 <../pbs.patch
+cd ..
+
+vim proxmox-backup/Cargo.toml
+    pxar = { path = "../pxar", features = [ "tokio-io", "futures-io" ] }
+
+vim pbs.build.sh
+    cd proxmox-backup
+    cargo vendor
+    cargo build --release --bin pxar
+    cargo build --release --bin proxmox-backup-client
+
+bash ./pbs.build.sh
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+./proxmox-backup/target/release/proxmox-backup-client version
+client version: 1.0.6
+
+install -Dm755 "proxmox-backup/target/release/proxmox-backup-client" "/usr/local/sbin/proxmox-backup-client"
+install -Dm755 "proxmox-backup/target/release/pxar" "/usr/local/sbin/pxar"
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
